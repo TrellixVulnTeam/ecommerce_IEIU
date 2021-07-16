@@ -18,7 +18,7 @@ def token_required(f):
         if not token:
             return jsonify({'Message': 'Token is missing'})
         try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
+            data = jwt.decode(token, app.config['SECRET_KEY'] ,algorithms=["HS256"])
             current_user = User.query.filter_by(public_id=data['public_id']).first()
         except:
             return jsonify({'Message': 'Token is invalid'}, 401)
@@ -80,7 +80,7 @@ def login():
         return jsonify({'Messaage': 'User does not exist'})
     if check_password_hash(user.password, auth.password):
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=120)}, app.config['SECRET_KEY'])
-        #decoded_token = token.decode('UTF-8')
+        #decoded_token = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
         return jsonify({'Token': token})
     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
 
