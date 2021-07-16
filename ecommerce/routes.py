@@ -80,7 +80,8 @@ def login():
         return jsonify({'Messaage': 'User does not exist'})
     if check_password_hash(user.password, auth.password):
         token = jwt.encode({'public_id': user.public_id, 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=120)}, app.config['SECRET_KEY'])
-        return jsonify({'Token': token.decode('UTF-8')})
+        decoded_token = token.decode('UTF-8')
+        return jsonify({'Token': decoded_token})
     return make_response('Could not verify', 401, {'WWW-Authenticate' : 'Basic realm="Login required!"'})
 
 
