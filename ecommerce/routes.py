@@ -150,8 +150,7 @@ def delete_category(current_user, category_id):
 
 #Products
 @app.route('/products', methods=['GET'])
-@app.route('/products/<int:page>')
-def products(page=1):
+def products():
     data = []
     products = Products.query.order_by(Products.id.desc())
     if not products:
